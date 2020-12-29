@@ -2,10 +2,11 @@
 Main entry file
 Author: Charles Wang
 */
+require('dotenv').config()
 
 const express = require('express') 
 const scheduleRouter = require('./routes/schedule.js')
-// const landingRouter = require('./routes/landing.js')
+const landingRouter = require('./routes/landing.js')
 
 const passport = require('passport')
 const auth = require('./auth')
@@ -65,24 +66,39 @@ app.get('/auth/google/callback',
 );
 
 // MONGODB
+const url = process.env.DB_SERVER // might want to use atlas later
 
-const MongoClient = require('mongodb').MongoClient
-const url = 'mongodb://127.0.0.1:27017'
-const dbName = 'scheduleApp' 
-let db 
+const mongoose = require('mongoose')
+mongoose
+.connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => {
+    app.use(scheduleRouter)
+    app.listen(8000, () => {
+        console.log("Server is running on port 8000")
+    });
+})
+.catch(err => {
+    console.log(err)
+})
 
-MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
-    if (err) return console.log(err)
+
+// const MongoClient = require('mongodb').MongoClient
+// const url = process.env.DB_SERVER
+// const dbName = process.env.DB
+// let db 
+
+// MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+//     if (err) return console.log(err)
   
-    // Storing a reference to the database so you can use it later
-    db = client.db(dbName)
-    console.log(`Connected MongoDB: ${url}`)
-    console.log(`Database: ${dbName}`)
-  })
+//     // Storing a reference to the database so you can use it later
+//     db = client.db(dbName)
+//     console.log(`Connected MongoDB: ${url}`)
+//     console.log(`Database: ${dbName}`)
+//   })
 
 
-app.use(scheduleRouter) // register application level middleware
+// app.use(scheduleRouter) // register application level middleware
 // app.use(landingRouter)
-app.listen(8000, () => {
-    console.log("Server is running on port 8000")
-});
+// app.listen(8000, () => {
+//     console.log("Server is running on port 8000")
+// });

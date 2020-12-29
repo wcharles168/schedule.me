@@ -15,7 +15,8 @@ export function LandingComponent() {
     //     })
     // }
     async function login() {
-        const response = await fetch('http://localhost:8000/auth/google')
+        const response = await fetch('http://localhost:8000/getLoginUrl')
+        const url = response.url 
     }
     return (
         <React.Fragment>
