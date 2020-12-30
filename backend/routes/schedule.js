@@ -1,3 +1,4 @@
+//app level routes
 const express = require('express');
 const Events = require('../models/event.js');
 const Users = require('../models/user.js');

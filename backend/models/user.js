@@ -1,10 +1,8 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    events: [{
-        type: String
-    }],
+    displayName: String,
+    userID: String,
     password: String,
     googleToken: String
     // probably also want authentication stuff here as well

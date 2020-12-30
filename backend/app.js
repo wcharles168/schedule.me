@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const express = require('express') 
 const scheduleRouter = require('./routes/schedule.js')
-const landingRouter = require('./routes/landing.js')
+const landingRouter = require('./routes/user.js')
 
 const passport = require('passport')
 const auth = require('./auth')
@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
     if (req.session.token) {
         res.cookie('token', req.session.token);
         res.json({
-            status: 'session cookie set'
+            status: 'session cookie set as '+ req.session.token
         });
     } else {
         res.cookie('token', '')
