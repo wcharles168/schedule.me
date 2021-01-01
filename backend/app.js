@@ -5,6 +5,7 @@ Author: Charles Wang
 require('dotenv').config()
 
 const express = require('express') 
+const bodyParser = require('body-parser');
 const scheduleRouter = require('./routes/schedule.js')
 const userRouter = require('./routes/user.js')
 
@@ -20,6 +21,8 @@ const defaultScope = [
 ];
 
 const app = express(); // create servers under the hood 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
 auth(passport)
 app.use(passport.initialize())
@@ -81,25 +84,3 @@ mongoose
 .catch(err => {
     console.log(err)
 })
-
-
-// const MongoClient = require('mongodb').MongoClient
-// const url = process.env.DB_SERVER
-// const dbName = process.env.DB
-// let db 
-
-// MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
-//     if (err) return console.log(err)
-  
-//     // Storing a reference to the database so you can use it later
-//     db = client.db(dbName)
-//     console.log(`Connected MongoDB: ${url}`)
-//     console.log(`Database: ${dbName}`)
-//   })
-
-
-// app.use(scheduleRouter) // register application level middleware
-// app.use(landingRouter)
-// app.listen(8000, () => {
-//     console.log("Server is running on port 8000")
-// });

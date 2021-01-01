@@ -1,27 +1,61 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
+import GoogleButton from 'react-google-button'
+import {makeStyles} from '@material-ui/core/styles'
+import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab'
+import {CreateAccount} from './signUp.js'
+import {Login} from './signIn.js'
+
+export const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh'
+    },
+    show: {
+        display: 'block'
+    },
+    hide: {
+        display: 'none'
+    },
+    form: {
+        margin: theme.spacing(2)
+    },
+    input: {
+      margin: theme.spacing(1),
+      width: '25ch'
+    },
+}));
 
 export function LandingComponent() {
-    // const [auth2, setAuth] = useState(null)
-    // useEffect(() => {
-    //     gapi.load('auth2', () => {
-    //         setAuth(gapi.auth2.init({
-    //             client_id: '681660428307-tlu6t58okkk8i6vi2fe4dm39i933f548.apps.googleusercontent.com'
-    //         }))
-    //     })
-    // })
-    // function onSignIn() {
-    //     gapi.load('auth2', () => {
-
-    //     })
-    // }
-    async function login() {
-        const response = await fetch('http://localhost:8000/getLoginUrl')
-        const url = response.url 
-    }
+    const classes = useStyles()
+    const [alignment, setAlignment] = useState(false) // false is sign up; true is sign in
+    const handleAlignment = (event, newAlignment) => {
+        setAlignment(newAlignment);
+    };
     return (
-        <React.Fragment>
-            <button onClick={login}>Login</button>
-            {/* <div class="g-signin2" data-onsuccess="onSignIn"></div> */}
-        </React.Fragment>
-    ) 
+        <div className={classes.root}>
+            <ToggleButtonGroup
+                value={alignment}
+                exclusive
+                onChange={handleAlignment}
+            >
+                <ToggleButton value={false}>Sign Up</ToggleButton>
+                <ToggleButton value={true}>Sign In</ToggleButton>
+            </ToggleButtonGroup>
+            <div className={`${alignment ? classes.hide : classes.show}`}>
+                <CreateAccount/>
+            </div>
+            <div className={`${alignment ? classes.show : classes.hide}`}>
+                <Login/>
+            </div>
+            <div>
+                <h2>OR</h2>
+                <GoogleButton/>
+            </div>
+        </div>
+        
+    )
 }
