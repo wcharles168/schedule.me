@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const express = require('express') 
 const scheduleRouter = require('./routes/schedule.js')
-const landingRouter = require('./routes/user.js')
+const userRouter = require('./routes/user.js')
 
 const passport = require('passport')
 const auth = require('./auth')
@@ -73,6 +73,7 @@ mongoose
 .connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => {
     app.use(scheduleRouter)
+    app.use(userRouter)
     app.listen(8000, () => {
         console.log("Server is running on port 8000")
     });
