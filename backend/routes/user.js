@@ -3,15 +3,19 @@ const express = require('express');
 const Users = require('../models/user.js');
 const router = express.Router(); 
 
-router.get('/api/user', (req, res, next) => {
-    console.log("request received")
-    result=Users.find({ userID: req.body.username }).exec();
-    res.json(result);
+
+router.get('/api/user/:username', (req, res, next) => {
+    Users.find({ userID: req.params.username }, function(err, arr) {
+        if (err) {
+            next(err)
+        } else {
+            res.json(arr)
+        }
+    })
     
 })
 
 router.post('/api/user', (req, res, next) => {
-    console.log(req.body)
     const newUser = new Users({
         displayName: req.body.username,
         userID: req.body.username,

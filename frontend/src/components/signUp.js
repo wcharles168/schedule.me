@@ -5,27 +5,30 @@ import {useStyles} from './landing.js'
 
 export function CreateAccount() {
     const classes = useStyles()
-    const defaultErr = 'At least 8 characters long'
+    const defaultErr1 = 'Set a username'
+    const defaultErr2 = 'At least 8 characters long'
     const [values, setValues] = useState({
         username: '',
         password: '',
-        errMessage: defaultErr,
+        userErr: defaultErr1,
+        passwordErr: defaultErr2,
         showPassword: false,
+        invalidUser: true,
         invalidPassword: true
     })
     const validatePassword = (event) => {
         if (event.target.value.length < 8) {
-            setValues({...values, ["password"]: event.target.value, ["errMessage"]: defaultErr, ["invalidPassword"]: true})
+            setValues({...values, ["password"]: event.target.value, ["passwordErr"]: defaultErr2, ["invalidPassword"]: true})
         } else {
-            setValues({...values, ["password"]: event.target.value, ["errMessage"]: '', ["invalidPassword"]: false})
+            setValues({...values, ["password"]: event.target.value, ["passwordErr"]: '', ["invalidPassword"]: false})
         }
     }
-    const handleChange = (prop) => (event) => {
-        if (prop === "password") {
-            validatePassword(event)
+    const updateUser = (event) => {
+        if (event.target.value === '') {
+            setValues({...values, ["username"]: event.target.value, ["userErr"]: defaultErr1, ["invalidUser"]: true})
         } else {
-            setValues({ ...values, [prop]: event.target.value });
-        }
+            setValues({...values, ["username"]: event.target.value, ["userErr"]: '', ["invalidUser"]: false})
+        }   
     }
     const handleClickShowPassword = () => {
         setValues({ ...values, showPassword: !values.showPassword });
@@ -33,9 +36,21 @@ export function CreateAccount() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault()
     }
+    const validateUser = async (event) => {
+        const response = await fetch('/api/user/' + values.username, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        const users = await response.json()
+        console.log(users)
+        if (users.length > 0) {
+            setValues({...values, ["userErr"]: "Username taken"})
+        } else {
+            createUser()
+        }
+    }
     async function createUser() {
-        // const response = await fetch('/testInsert')
-        console.log(JSON.stringify(values))
         const response = await fetch('/api/user', {
             headers: {
                 'Accept': 'application/json',
@@ -53,13 +68,14 @@ export function CreateAccount() {
                     <Input
                         id="standard-adornment-username" 
                         value={values.username}
-                        onChange={handleChange("username")}
+                        onChange={updateUser}
                         endAdornment={
                             <InputAdornment position="start">
                                 <AccountCircle />
                             </InputAdornment>
                         }
                     />
+                    <FormHelperText>{values.userErr}</FormHelperText>
                 </FormControl>
                 <FormControl className={classes.input}>
                     <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
@@ -67,7 +83,7 @@ export function CreateAccount() {
                         id="standard-adornment-password" 
                         type={values.showPassword ? "text" : "password"}
                         value={values.password}
-                        onChange={handleChange("password")}
+                        onChange={validatePassword}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -80,10 +96,16 @@ export function CreateAccount() {
                             </InputAdornment>
                         }
                     />
-                    <FormHelperText>{values.errMessage}</FormHelperText>
+                    <FormHelperText>{values.passwordErr}</FormHelperText>
                 </FormControl>
             </form>
-            <Button variant="contained" onClick={createUser}>Create Account</Button>
+            <Button 
+                variant="contained" 
+                disabled={values.invalidUser || values.invalidPassword} 
+                onClick={validateUser}
+            >
+                Create Account
+            </Button>
         </div>
     ) 
 }

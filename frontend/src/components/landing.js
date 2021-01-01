@@ -51,8 +51,10 @@ export function LandingComponent() {
             <div className={`${alignment ? classes.show : classes.hide}`}>
                 <Login/>
             </div>
-            <h2>Sign in with Google</h2>
-            <GoogleButton/>
+            <div>
+                <h2>OR</h2>
+                <GoogleButton/>
+            </div>
         </div>
         
     )
