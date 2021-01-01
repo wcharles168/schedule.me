@@ -5,11 +5,11 @@ const router = express.Router();
 
 
 router.get('/api/user/:username', (req, res, next) => {
-    Users.find({ userID: req.params.username }, function(err, arr) {
+    Users.find({ userID: req.params.username }, function(err, result) {
         if (err) {
             next(err)
         } else {
-            res.json(arr)
+            res.json(result)
         }
     })
     
