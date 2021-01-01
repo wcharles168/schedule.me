@@ -5,6 +5,7 @@ Author: Charles Wang
 require('dotenv').config()
 
 const express = require('express') 
+const bodyParser = require('body-parser');
 const scheduleRouter = require('./routes/schedule.js')
 const landingRouter = require('./routes/user.js')
 
@@ -20,6 +21,8 @@ const defaultScope = [
 ];
 
 const app = express(); // create servers under the hood 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
 auth(passport)
 app.use(passport.initialize())
@@ -73,6 +76,7 @@ mongoose
 .connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => {
     app.use(scheduleRouter)
+    app.use(landingRouter)
     app.listen(8000, () => {
         console.log("Server is running on port 8000")
     });
