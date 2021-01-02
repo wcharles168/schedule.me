@@ -21,15 +21,4 @@ const eventSchema = new mongoose.Schema({
     timeZone: String
 }, { timestamps: true}) // createdAt and updatedAt
 
-// eventSchema.virtual('url').get(function() {
-//     return this.eventId + this.numId
-// })
-// // middleware that auto-increments id before saving document
-// eventSchema.pre('save', function(next) {
-//     counter.findByIdAndUpdate({_id: 'eventId'}, {$inc: {seq: 1}, function(error, counter) {
-//         if (error) return next(error)
-//         this.numId = counter.seq 
-//         next()
-//     }})
-// }) 
 module.exports = Events = mongoose.model('Events', eventSchema, 'events')
